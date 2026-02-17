@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Management System</title>
+
+    <!-- React CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- CSS -->
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 400px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 6px 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ddd;
+            margin: 8px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function LibraryApp() {
+    // Book State
+    const [books, setBooks] = React.useState([
+        { id: 1, title: "Data Structures", author: "Mark Allen" },
+        { id: 2, title: "DBMS", author: "Korth" },
+        { id: 3, title: "Operating System", author: "Galvin" }
+    ]);
+
+    // Form State
+    const [title, setTitle] = React.useState("");
+    const [author, setAuthor] = React.useState("");
+
+    // Search State
+    const [search, setSearch] = React.useState("");
+
+    // Add Book
+    const addBook = () => {
+        if (title === "" || author === "") return;
+
+        const newBook = {
+            id: Date.now(),
+            title: title,
+            author: author
+        };
+
+        setBooks([...books, newBook]);
+        setTitle("");
+        setAuthor("");
+    };
+
+    // Remove Book
+    const removeBook = (id) => {
+        setBooks(books.filter(book => book.id !== id));
+    };
+
+    // Search Filter
+    const filteredBooks = books.filter(book =>
+        book.title.toLowerCase().includes(search.toLowerCase()) ||
+        book.author.toLowerCase().includes(search.toLowerCase())
+    );
+
+    return (
+        <div className="container">
+            <h2>Library Management System</h2>
+
+            {/* Search */}
+            <input
+                type="text"
+                placeholder="Search by title or author"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+            />
+
+            {/* Add Book */}
+            <input
+                type="text"
+                placeholder="Book Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+            />
+
+            <input
+                type="text"
+                placeholder="Author Name"
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
+            />
+
+            <button onClick={addBook}>Add Book</button>
+
+            {/* Book List */}
+            <ul>
+                {filteredBooks.map(book => (
+                    <li key={book.id}>
+                        <b>{book.title}</b> - {book.author}
+                        <br/>
+                        <button onClick={() => removeBook(book.id)}>
+                            Remove
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+// Render App
+ReactDOM.createRoot(document.getElementById("root")).render(<LibraryApp />);
+
+</script>
+
+</body>
+</html>
